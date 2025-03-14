@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖 כרטיסיות לימוד</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center max-w-lg w-full">
+        <h1 class="text-2xl font-bold mb-4 text-green-600">📖 כרטיסיות לימוד</h1>
+
+        <div class="flex justify-between items-center bg-green-100 p-4 rounded-lg mb-4">
+            <button id="prevFlashcardBtn" class="text-2xl">⬅️</button>
+            <div id="flashcardContent">
+                <p id="flashcardHebrew" class="text-lg font-semibold"></p>
+                <p id="flashcardTranscription" class="text-lg text-blue-500"></p>
+                <p id="flashcardArabic" class="text-xl text-gray-800 font-bold mt-2"></p>
+            </div>
+            <button id="nextFlashcardBtn" class="text-2xl">➡️</button>
+        </div>
+
+        <p id="flashcardNumber" class="text-gray-600 mb-3">כרטיס 1 מתוך 0</p>
+
+        <button id="deleteFlashcardBtn" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">🗑️ מחק את הכרטיס הזה</button>
+
+        <button id="shuffleFlashcardsBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-4">🔀 ערבב כרטיסיות</button>
+
+        <br>
+        <a href="index.html" class="mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">🔙 חזרה למשפטים</a>
+    </div>
+
+    <script>
+        const flashcardHebrew = document.getElementById("flashcardHebrew");
+        const flashcardTranscription = document.getElementById("flashcardTranscription");
+        const flashcardArabic = document.getElementById("flashcardArabic");
+        const flashcardNumber = document.getElementById("flashcardNumber");
+
+        const prevFlashcardBtn = document.getElementById("prevFlashcardBtn");
+        const nextFlashcardBtn = document.getElementById("nextFlashcardBtn");
+        const deleteFlashcardBtn = document.getElementById("deleteFlashcardBtn");
+        const shuffleFlashcardsBtn = document.getElementById("shuffleFlashcardsBtn");
+
+        let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
+        let flashcardIndex = 0;
+
+        function displayFlashcard() {
+            if (flashcards.length === 0) {
+                flashcardHebrew.textContent = "אין כרטיסיות זמינות";
+                flashcardTranscription.textContent = "";
+                flashcardArabic.textContent = "";
+                flashcardNumber.textContent = "כרטיס 0 מתוך 0";
+                deleteFlashcardBtn.disabled = true;
+                return;
+            }
+
+            deleteFlashcardBtn.disabled = false;
+            const currentCard = flashcards[flashcardIndex];
+            flashcardHebrew.textContent = currentCard.hebrew;
+            flashcardTranscription.textContent = currentCard.transcription;
+            flashcardArabic.textContent = currentCard.arabic;
+            flashcardNumber.textContent = `כרטיס ${flashcardIndex + 1} מתוך ${flashcards.length}`;
+        }
+
+        nextFlashcardBtn.addEventListener("click", () => {
+            if (flashcardIndex < flashcards.length - 1) {
+                flashcardIndex++;
+                displayFlashcard();
+            }
+        });
+
+        prevFlashcardBtn.addEventListener("click", () => {
+            if (flashcardIndex > 0) {
+                flashcardIndex--;
+                displayFlashcard();
+            }
+        });
+
+        deleteFlashcardBtn.addEventListener("click", () => {
+            if (flashcards.length > 0) {
+                flashcards.splice(flashcardIndex, 1);
+                localStorage.setItem("flashcards", JSON.stringify(flashcards));
+                flashcardIndex = Math.min(flashcardIndex, flashcards.length - 1);
+                displayFlashcard();
+            }
+        });
+
+        shuffleFlashcardsBtn.addEventListener("click", () => {
+            for (let i = flashcards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
+            }
+            localStorage.setItem("flashcards", JSON.stringify(flashcards));
+            flashcardIndex = 0;
+            displayFlashcard();
+        });
+
+        displayFlashcard();
+    </script>
+</body>
+</html>
