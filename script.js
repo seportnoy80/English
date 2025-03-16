@@ -21,6 +21,18 @@ function displayWord() {
     document.getElementById("sentenceNumber").textContent = `מילה ${currentIndex + 1} מתוך ${words.length}`;
 }
 
+
+function addToFlashcards() 
+{
+            let englishWord = document.getElementById("englishWord").textContent;
+            let hebrewTranslation = document.getElementById("hebrewTranslation").textContent;
+            
+            if (!flashcards.some(card => card.english === englishWord)) {
+                flashcards.push({ english: englishWord, hebrew: hebrewTranslation });
+                localStorage.setItem("flashcards", JSON.stringify(flashcards));
+            }
+}
+
 document.getElementById("translationContainer")?.addEventListener("click", function() {
     document.getElementById("coverLayer").classList.add("hidden");
     document.getElementById("hebrewTranslation").classList.remove("opacity-0");
