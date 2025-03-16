@@ -20,7 +20,7 @@
         <p id="sentenceNumber" class="text-gray-600 mb-3">מילה 1 מתוך 1000</p>
 
         <div class="bg-gray-200 p-4 rounded-lg relative cursor-pointer" id="translationContainer">
-            <p id="hebrewTranslation" class="text-xl text-gray-800 font-bold mt-2 opacity-0">תרגום בעברית</p>
+            <p id="hebrewTranslation" class="text-xl text-gray-800 font-bold mt-2">תרגום בעברית</p>
             <div id="coverLayer" class="absolute inset-0 bg-gray-300 flex items-center justify-center text-lg font-bold">לחץ לחשיפת התרגום</div>
         </div>
 
@@ -28,9 +28,45 @@
     </div>
 
     <script>
+        let words = [];
+        let currentIndex = 0;
+
+        async function loadWords() {
+            try {
+                const response = await fetch("updated_sentences.json");
+                words = await response.json();
+                displayWord();
+            } catch (error) {
+                console.error("Failed to load words.", error);
+            }
+        }
+
+        function displayWord() {
+            if (words.length === 0) return;
+            document.getElementById("englishWord").textContent = words[currentIndex].english;
+            document.getElementById("hebrewTranslation").textContent = words[currentIndex].hebrew;
+            document.getElementById("hebrewTranslation").classList.add("opacity-0");
+            document.getElementById("coverLayer").classList.remove("hidden");
+            document.getElementById("sentenceNumber").textContent = `מילה ${currentIndex + 1} מתוך ${words.length}`;
+        }
+
         document.getElementById("translationContainer").addEventListener("click", function() {
             document.getElementById("coverLayer").classList.add("hidden");
             document.getElementById("hebrewTranslation").classList.remove("opacity-0");
+        });
+
+        document.getElementById("nextSentenceBtn")?.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % words.length;
+            displayWord();
+        });
+
+        document.getElementById("prevSentenceBtn")?.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + words.length) % words.length;
+            displayWord();
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadWords();
         });
     </script>
 </body>
