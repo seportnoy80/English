@@ -13,14 +13,14 @@
 
         <div class="flex justify-between items-center bg-blue-100 p-4 rounded-lg mb-4">
             <button id="prevSentenceBtn" class="text-2xl">⬅️ קודם</button>
-            <p id="englishWord" class="text-lg font-semibold cursor-pointer">לחץ כדי לקבל מילה</p>
+            <p id="englishWord" class="text-lg font-semibold">לחץ כדי לקבל מילה</p>
             <button id="nextSentenceBtn" class="text-2xl">הבאה ➡</button>
         </div>
 
         <p id="sentenceNumber" class="text-gray-600 mb-3">מילה 1 מתוך 1000</p>
 
         <div class="bg-gray-200 p-4 rounded-lg relative cursor-pointer" id="translationContainer">
-            <p id="hebrewTranslation" class="text-xl text-gray-800 font-bold mt-2 opacity-0 cursor-pointer">תרגום בעברית</p>
+            <p id="hebrewTranslation" class="text-xl text-gray-800 font-bold mt-2 opacity-0">תרגום בעברית</p>
             <div id="coverLayer" class="absolute inset-0 bg-gray-300 flex items-center justify-center text-lg font-bold cursor-pointer">לחץ לחשיפת התרגום</div>
         </div>
 
@@ -28,25 +28,13 @@
     </div>
 
     <script>
-        let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
-
         document.getElementById("coverLayer").addEventListener("click", function() {
             document.getElementById("coverLayer").classList.add("hidden");
             document.getElementById("hebrewTranslation").classList.remove("opacity-0");
+		   
         });
-
-        function addToFlashcards() {
-            let englishWord = document.getElementById("englishWord").textContent;
-            let hebrewTranslation = document.getElementById("hebrewTranslation").textContent;
-            
-            if (!flashcards.some(card => card.english === englishWord)) {
-                flashcards.push({ english: englishWord, hebrew: hebrewTranslation });
-                localStorage.setItem("flashcards", JSON.stringify(flashcards));
-            }
-        }
-
-        document.getElementById("englishWord").addEventListener("click", addToFlashcards);
-        document.getElementById("hebrewTranslation").addEventListener("click", addToFlashcards);
+		 document.getElementById("englishWord").addEventListener("click", addToFlashcards);
+            document.getElementById("hebrewTranslation").addEventListener("click", addToFlashcards);
     </script>
 </body>
 </html>
