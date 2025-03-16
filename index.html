@@ -20,7 +20,7 @@
         <p id="sentenceNumber" class="text-gray-600 mb-3">מילה 1 מתוך 1000</p>
 
         <div class="bg-gray-200 p-4 rounded-lg relative cursor-pointer" id="translationContainer">
-            <p id="hebrewTranslation" class="text-xl text-gray-800 font-bold mt-2 opacity-0">תרגום בעברית</p>
+            <p id="hebrewTranslation" class="text-xl text-gray-800 font-bold mt-2 opacity-0 cursor-pointer">תרגום בעברית</p>
             <div id="coverLayer" class="absolute inset-0 bg-gray-300 flex items-center justify-center text-lg font-bold cursor-pointer">לחץ לחשיפת התרגום</div>
         </div>
 
@@ -35,7 +35,7 @@
             document.getElementById("hebrewTranslation").classList.remove("opacity-0");
         });
 
-        document.getElementById("englishWord").addEventListener("click", function() {
+        function addToFlashcards() {
             let englishWord = document.getElementById("englishWord").textContent;
             let hebrewTranslation = document.getElementById("hebrewTranslation").textContent;
             
@@ -43,7 +43,10 @@
                 flashcards.push({ english: englishWord, hebrew: hebrewTranslation });
                 localStorage.setItem("flashcards", JSON.stringify(flashcards));
             }
-        });
+        }
+
+        document.getElementById("englishWord").addEventListener("click", addToFlashcards);
+        document.getElementById("hebrewTranslation").addEventListener("click", addToFlashcards);
     </script>
 </body>
 </html>
