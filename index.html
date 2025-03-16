@@ -20,13 +20,18 @@
         <p id="sentenceNumber" class="text-gray-600 mb-3">מילה 1 מתוך 1000</p>
 
         <div class="bg-gray-200 p-4 rounded-lg relative cursor-pointer" id="translationContainer">
-            <p id="hebrewTranslation" class="text-xl text-gray-800 font-bold mt-2">תרגום בעברית</p>
-            <div id="coverLayer" class="absolute inset-0 bg-gray-300 flex items-center justify-center text-lg font-bold">לחץ לחשיפת התרגום</div>
+            <p id="hebrewTranslation" class="text-xl text-gray-800 font-bold mt-2 opacity-0">תרגום בעברית</p>
+            <div id="coverLayer" class="absolute inset-0 bg-gray-300 flex items-center justify-center text-lg font-bold cursor-pointer">לחץ לחשיפת התרגום</div>
         </div>
 
         <a href="flashcards.html" class="mt-4 inline-block bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">📖 מעבר לכרטיסיות</a>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.getElementById("coverLayer").addEventListener("click", function() {
+            document.getElementById("coverLayer").classList.add("hidden");
+            document.getElementById("hebrewTranslation").classList.remove("opacity-0");
+        });
+    </script>
 </body>
 </html>
