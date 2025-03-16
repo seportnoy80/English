@@ -16,8 +16,15 @@ function displayWord() {
     if (words.length === 0) return;
     document.getElementById("englishWord").textContent = words[currentIndex].english;
     document.getElementById("hebrewTranslation").textContent = words[currentIndex].hebrew;
+    document.getElementById("hebrewTranslation").classList.add("opacity-0");
+    document.getElementById("coverLayer").classList.remove("hidden");
     document.getElementById("sentenceNumber").textContent = `מילה ${currentIndex + 1} מתוך ${words.length}`;
 }
+
+document.getElementById("translationContainer")?.addEventListener("click", function() {
+    document.getElementById("coverLayer").classList.add("hidden");
+    document.getElementById("hebrewTranslation").classList.remove("opacity-0");
+});
 
 document.getElementById("nextSentenceBtn")?.addEventListener("click", () => {
     currentIndex = (currentIndex + 1) % words.length;
