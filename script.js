@@ -2,6 +2,12 @@ let words = [];
 let currentIndex = 0;
 let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
 
+document.addEventListener("DOMContentLoaded", () => {
+    loadWords();
+    document.getElementById("englishWord").addEventListener("click", addToFlashcards);
+    document.getElementById("hebrewTranslation").addEventListener("click", addToFlashcards);
+});
+
 async function loadWords() {
     try {
         const response = await fetch("updated_sentences.json");
@@ -53,10 +59,3 @@ function addToFlashcards() {
         }, 2000);
     }
 }
-
-document.getElementById("englishWord")?.addEventListener("click", addToFlashcards);
-document.getElementById("hebrewTranslation")?.addEventListener("click", addToFlashcards);
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadWords();
-});
