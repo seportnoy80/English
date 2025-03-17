@@ -43,19 +43,30 @@ document.getElementById("prevSentenceBtn")?.addEventListener("click", () => {
 });
 
 function addToFlashcards() {
-    let englishWord = document.getElementById("englishWord").textContent;
-    let hebrewTranslation = document.getElementById("hebrewTranslation").textContent;
+    let englishWord = document.getElementById("englishWord")?.textContent;
+    let hebrewTranslation = document.getElementById("hebrewTranslation")?.textContent;
     let messageBox = document.getElementById("messageBox");
-    
+
+    console.log("Trying to add:", englishWord, hebrewTranslation);
+
+    if (!englishWord || !hebrewTranslation) {
+        console.error("Error: Could not find words.");
+        return;
+    }
+
     if (!flashcards.some(card => card.english === englishWord)) {
         flashcards.push({ english: englishWord, hebrew: hebrewTranslation });
         localStorage.setItem("flashcards", JSON.stringify(flashcards));
         
+        console.log("✅ Word added to flashcards:", flashcards);
+        
         messageBox.textContent = "✅ המילה נוספה לכרטיסיות!";
         messageBox.classList.remove("hidden");
-        
+
         setTimeout(() => {
             messageBox.classList.add("hidden");
         }, 2000);
+    } else {
+        console.log("ℹ️ Word already exists in flashcards.");
     }
 }

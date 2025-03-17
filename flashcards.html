@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>כרטיסיות לימוד אנגלית</title>
+    <title>כרטיסיות לימוד</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 
     <div class="bg-white p-6 rounded-lg shadow-lg text-center max-w-lg w-full">
-        <h1 class="text-2xl font-bold mb-4 text-green-600">📖 כרטיסיות לימוד אנגלית</h1>
+        <h1 class="text-2xl font-bold mb-4 text-green-600">📖 כרטיסיות לימוד</h1>
 
         <div class="flex justify-between items-center bg-green-100 p-4 rounded-lg mb-4">
             <button id="prevFlashcardBtn" class="text-2xl">⬅️</button>
             <div id="flashcardContent">
                 <p id="flashcardEnglish" class="text-lg font-semibold"></p>
-                <p id="flashcardHebrew" class="text-xl text-gray-800 font-bold mt-2"></p>
+                <p id="flashcardHebrew" class="text-lg text-gray-700 mt-2"></p>
             </div>
             <button id="nextFlashcardBtn" class="text-2xl">➡️</button>
         </div>
@@ -23,13 +23,56 @@
         <p id="flashcardNumber" class="text-gray-600 mb-3">כרטיס 1 מתוך 0</p>
 
         <button id="deleteFlashcardBtn" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">🗑️ מחק את הכרטיס הזה</button>
-
         <button id="shuffleFlashcardsBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-4">🔀 ערבב כרטיסיות</button>
 
         <br>
         <a href="index.html" class="mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">🔙 חזרה למילים</a>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
+        let flashcardIndex = 0;
+
+        function loadFlashcards() {
+            if (flashcards.length === 0) {
+                document.getElementById("flashcardEnglish").textContent = "אין כרטיסיות";
+                document.getElementById("flashcardHebrew").textContent = "";
+                document.getElementById("flashcardNumber").textContent = "";
+                return;
+            }
+
+            document.getElementById("flashcardEnglish").textContent = flashcards[flashcardIndex].english;
+            document.getElementById("flashcardHebrew").textContent = flashcards[flashcardIndex].hebrew;
+            document.getElementById("flashcardNumber").textContent = `כרטיס ${flashcardIndex + 1} מתוך ${flashcards.length}`;
+        }
+
+        document.getElementById("nextFlashcardBtn").addEventListener("click", () => {
+            flashcardIndex = (flashcardIndex + 1) % flashcards.length;
+            loadFlashcards();
+        });
+
+        document.getElementById("prevFlashcardBtn").addEventListener("click", () => {
+            flashcardIndex = (flashcardIndex - 1 + flashcards.length) % flashcards.length;
+            loadFlashcards();
+        });
+
+        document.getElementById("deleteFlashcardBtn").addEventListener("click", () => {
+            if (flashcards.length === 0) return;
+            flashcards.splice(flashcardIndex, 1);
+            localStorage.setItem("flashcards", JSON.stringify(flashcards));
+            flashcardIndex = Math.min(flashcardIndex, flashcards.length - 1);
+            loadFlashcards();
+        });
+
+        document.getElementById("shuffleFlashcardsBtn").addEventListener("click", () => {
+            flashcards = flashcards.sort(() => Math.random() - 0.5);
+            localStorage.setItem("flashcards", JSON.stringify(flashcards));
+            flashcardIndex = 0;
+            loadFlashcards();
+        });
+
+        document.addEventListener("DOMContentLoaded", loadFlashcards);
+    </script>
+
 </body>
 </html>
