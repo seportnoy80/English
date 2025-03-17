@@ -21,19 +21,7 @@ function displayWord() {
     document.getElementById("sentenceNumber").textContent = `מילה ${currentIndex + 1} מתוך ${words.length}`;
 }
 
-
-function addToFlashcards() 
-{
-            let englishWord = document.getElementById("englishWord").textContent;
-            let hebrewTranslation = document.getElementById("hebrewTranslation").textContent;
-            
-            if (!flashcards.some(card => card.english === englishWord)) {
-                flashcards.push({ english: englishWord, hebrew: hebrewTranslation });
-                localStorage.setItem("flashcards", JSON.stringify(flashcards));
-            }
-}
-
-document.getElementById("translationContainer")?.addEventListener("click", function() {
+document.getElementById("coverLayer")?.addEventListener("click", function() {
     document.getElementById("coverLayer").classList.add("hidden");
     document.getElementById("hebrewTranslation").classList.remove("opacity-0");
 });
@@ -48,13 +36,18 @@ document.getElementById("prevSentenceBtn")?.addEventListener("click", () => {
     displayWord();
 });
 
-document.getElementById("englishWord")?.addEventListener("click", () => {
-    const wordToSave = words[currentIndex];
-    if (!flashcards.some(flashcard => flashcard.english === wordToSave.english)) {
-        flashcards.push(wordToSave);
+function addToFlashcards() {
+    let englishWord = document.getElementById("englishWord").textContent;
+    let hebrewTranslation = document.getElementById("hebrewTranslation").textContent;
+    
+    if (!flashcards.some(card => card.english === englishWord)) {
+        flashcards.push({ english: englishWord, hebrew: hebrewTranslation });
         localStorage.setItem("flashcards", JSON.stringify(flashcards));
     }
-});
+}
+
+document.getElementById("englishWord")?.addEventListener("click", addToFlashcards);
+document.getElementById("hebrewTranslation")?.addEventListener("click", addToFlashcards);
 
 document.addEventListener("DOMContentLoaded", () => {
     loadWords();
