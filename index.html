@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1N9WJVNPBP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1N9WJVNPBP');
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>לימוד אנגלית</title>
@@ -9,14 +18,14 @@
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 
     <div class="bg-white p-6 rounded-lg shadow-lg text-center max-w-lg w-full">
-	<p id="knownWordsCounter" class="text-lg font-bold text-green-600">אוצר במילים שלי  : 0 מילים</p>
+	<p id="knownWordsCounter" class="text-lg font-bold text-green-600">`כמה מילים אני יודע/ת:</p>
 
 	<div id="messageBox" class="hidden text-green-600 text-lg mt-2"></div>
         <h1 class="text-2xl font-bold mb-4 text-blue-600">לימוד אנגלית</h1>
 
         <div class="flex justify-between items-center bg-blue-100 p-4 rounded-lg mb-4">
             <button id="prevSentenceBtn" class="text-gray-600 mb-3">⬅️ קודם</button>
-            <p id="englishWord" class="text-lg font-semibold cursor-pointer">לחץ כדי לקבל מילה</p>
+            <p id="englishWord" class="text-2xl font-bold mb-4 text-blue-600">לחץ כדי לקבל מילה</p>
             <button id="nextSentenceBtn" class="text-gray-600 mb-3">הבאה ➡</button>
         </div>
 
@@ -25,7 +34,7 @@
         <div class="bg-gray-200 p-4 rounded-lg relative cursor-pointer" id="translationContainer">
             <p id="hebrewTranslation" class="text-xl text-gray-800 font-bold mt-2 opacity-0 cursor-pointer">תרגום בעברית</p>
             <div id="coverLayer" class="absolute inset-0 bg-gray-300 flex items-center justify-center text-lg font-bold cursor-pointer">לחץ לחשיפת התרגום</div><button id="removeWordBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-4">
-    ✅ אני יודע מילה זו
+    ✅ מכיר את המילה הזאת
 </button>
 
         </div>

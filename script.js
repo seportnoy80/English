@@ -5,7 +5,7 @@ let knownWords = JSON.parse(localStorage.getItem("knownWords")) || [];
 
 // Update counter
 function updateKnownWordsCounter() {
-    document.getElementById("knownWordsCounter").textContent = `מילים ידועות: ${knownWords.length}`;
+    document.getElementById("knownWordsCounter").textContent = `כמה מילים אני יודע/ת: ${knownWords.length}`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -85,7 +85,7 @@ function removeKnownWord() {
 
 function shareProgress() {
     const shareText = `אני לומד עברית! אני כבר יודע ${knownWords.length} מילים! 🌟
-    נסו גם: https://yourlanguagewebsite.com`;
+    נסו גם: https://english.casual-words.com/`;
     if (navigator.share) {
         navigator.share({ text: shareText })
             .then(() => console.log("Shared successfully"))
