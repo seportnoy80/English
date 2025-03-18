@@ -1,17 +1,27 @@
 let words = [];
 let currentIndex = 0;
 let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
+let knownWords = JSON.parse(localStorage.getItem("knownWords")) || [];
+
+// Update counter
+function updateKnownWordsCounter() {
+    document.getElementById("knownWordsCounter").textContent = `מילים ידועות: ${knownWords.length}`;
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     loadWords();
+    updateKnownWordsCounter();
     document.getElementById("englishWord").addEventListener("click", addToFlashcards);
     document.getElementById("hebrewTranslation").addEventListener("click", addToFlashcards);
+    document.getElementById("removeWordBtn").addEventListener("click", removeKnownWord);
+    document.getElementById("shareBtn").addEventListener("click", shareProgress);
 });
 
 async function loadWords() {
     try {
         const response = await fetch("updated_sentences.json");
         words = await response.json();
+        words = words.filter(word => !knownWords.some(known => known.english === word.english)); // Remove known words
         displayWord();
     } catch (error) {
         console.error("Failed to load words.", error);
@@ -43,30 +53,44 @@ document.getElementById("prevSentenceBtn")?.addEventListener("click", () => {
 });
 
 function addToFlashcards() {
-    let englishWord = document.getElementById("englishWord")?.textContent;
-    let hebrewTranslation = document.getElementById("hebrewTranslation")?.textContent;
+    let englishWord = document.getElementById("englishWord").textContent;
+    let hebrewTranslation = document.getElementById("hebrewTranslation").textContent;
     let messageBox = document.getElementById("messageBox");
-
-    console.log("Trying to add:", englishWord, hebrewTranslation);
-
-    if (!englishWord || !hebrewTranslation) {
-        console.error("Error: Could not find words.");
-        return;
-    }
-
+    
     if (!flashcards.some(card => card.english === englishWord)) {
         flashcards.push({ english: englishWord, hebrew: hebrewTranslation });
         localStorage.setItem("flashcards", JSON.stringify(flashcards));
         
-        console.log("✅ Word added to flashcards:", flashcards);
-        
         messageBox.textContent = "✅ המילה נוספה לכרטיסיות!";
         messageBox.classList.remove("hidden");
-
+        
         setTimeout(() => {
             messageBox.classList.add("hidden");
         }, 2000);
+    }
+}
+
+function removeKnownWord() {
+    let englishWord = document.getElementById("englishWord").textContent;
+    let hebrewTranslation = document.getElementById("hebrewTranslation").textContent;
+    
+    knownWords.push({ english: englishWord, hebrew: hebrewTranslation });
+    localStorage.setItem("knownWords", JSON.stringify(knownWords));
+    updateKnownWordsCounter();
+    
+    words = words.filter(word => word.english !== englishWord);
+    currentIndex = Math.min(currentIndex, words.length - 1);
+    displayWord();
+}
+
+function shareProgress() {
+    const shareText = `אני לומד עברית! אני כבר יודע ${knownWords.length} מילים! 🌟
+    נסו גם: https://yourlanguagewebsite.com`;
+    if (navigator.share) {
+        navigator.share({ text: shareText })
+            .then(() => console.log("Shared successfully"))
+            .catch(error => console.error("Error sharing:", error));
     } else {
-        console.log("ℹ️ Word already exists in flashcards.");
+        alert("Sharing not supported on this browser.");
     }
 }

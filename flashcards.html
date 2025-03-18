@@ -10,6 +10,8 @@
 
     <div class="bg-white p-6 rounded-lg shadow-lg text-center max-w-lg w-full">
         <h1 class="text-2xl font-bold mb-4 text-green-600">📖 כרטיסיות לימוד</h1>
+        
+        <p id="knownWordsCounter" class="text-lg font-bold text-green-600">מילים ידועות: 0</p>
 
         <div class="flex justify-between items-center bg-green-100 p-4 rounded-lg mb-4">
             <button id="prevFlashcardBtn" class="text-2xl">⬅️</button>
@@ -22,6 +24,7 @@
 
         <p id="flashcardNumber" class="text-gray-600 mb-3">כרטיס 1 מתוך 0</p>
 
+        <button id="removeWordBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">✅ אני יודע מילה זו</button>
         <button id="deleteFlashcardBtn" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">🗑️ מחק את הכרטיס הזה</button>
         <button id="shuffleFlashcardsBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-4">🔀 ערבב כרטיסיות</button>
 
@@ -30,49 +33,67 @@
     </div>
 
     <script>
-        let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
-        let flashcardIndex = 0;
+        document.addEventListener("DOMContentLoaded", () => {
+            let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
+            let knownWords = JSON.parse(localStorage.getItem("knownWords")) || [];
+            let flashcardIndex = 0;
+            updateKnownWordsCounter();
 
-        function loadFlashcards() {
-            if (flashcards.length === 0) {
-                document.getElementById("flashcardEnglish").textContent = "אין כרטיסיות";
-                document.getElementById("flashcardHebrew").textContent = "";
-                document.getElementById("flashcardNumber").textContent = "";
-                return;
+            function loadFlashcards() {
+                if (flashcards.length === 0) {
+                    document.getElementById("flashcardEnglish").textContent = "אין כרטיסיות";
+                    document.getElementById("flashcardHebrew").textContent = "";
+                    document.getElementById("flashcardNumber").textContent = "";
+                    return;
+                }
+                document.getElementById("flashcardEnglish").textContent = flashcards[flashcardIndex].english;
+                document.getElementById("flashcardHebrew").textContent = flashcards[flashcardIndex].hebrew;
+                document.getElementById("flashcardNumber").textContent = `כרטיס ${flashcardIndex + 1} מתוך ${flashcards.length}`;
             }
 
-            document.getElementById("flashcardEnglish").textContent = flashcards[flashcardIndex].english;
-            document.getElementById("flashcardHebrew").textContent = flashcards[flashcardIndex].hebrew;
-            document.getElementById("flashcardNumber").textContent = `כרטיס ${flashcardIndex + 1} מתוך ${flashcards.length}`;
-        }
+            document.getElementById("nextFlashcardBtn").addEventListener("click", () => {
+                flashcardIndex = (flashcardIndex + 1) % flashcards.length;
+                loadFlashcards();
+            });
 
-        document.getElementById("nextFlashcardBtn").addEventListener("click", () => {
-            flashcardIndex = (flashcardIndex + 1) % flashcards.length;
+            document.getElementById("prevFlashcardBtn").addEventListener("click", () => {
+                flashcardIndex = (flashcardIndex - 1 + flashcards.length) % flashcards.length;
+                loadFlashcards();
+            });
+
+            document.getElementById("deleteFlashcardBtn").addEventListener("click", () => {
+                if (flashcards.length === 0) return;
+                flashcards.splice(flashcardIndex, 1);
+                localStorage.setItem("flashcards", JSON.stringify(flashcards));
+                flashcardIndex = Math.min(flashcardIndex, flashcards.length - 1);
+                loadFlashcards();
+            });
+
+            document.getElementById("removeWordBtn").addEventListener("click", () => {
+                if (flashcards.length === 0) return;
+                let knownWord = flashcards[flashcardIndex];
+                knownWords.push(knownWord);
+                localStorage.setItem("knownWords", JSON.stringify(knownWords));
+                flashcards.splice(flashcardIndex, 1);
+                localStorage.setItem("flashcards", JSON.stringify(flashcards));
+                updateKnownWordsCounter();
+                flashcardIndex = Math.min(flashcardIndex, flashcards.length - 1);
+                loadFlashcards();
+            });
+
+            function updateKnownWordsCounter() {
+                document.getElementById("knownWordsCounter").textContent = `מילים ידועות: ${knownWords.length}`;
+            }
+
+            document.getElementById("shuffleFlashcardsBtn").addEventListener("click", () => {
+                flashcards = flashcards.sort(() => Math.random() - 0.5);
+                localStorage.setItem("flashcards", JSON.stringify(flashcards));
+                flashcardIndex = 0;
+                loadFlashcards();
+            });
+
             loadFlashcards();
         });
-
-        document.getElementById("prevFlashcardBtn").addEventListener("click", () => {
-            flashcardIndex = (flashcardIndex - 1 + flashcards.length) % flashcards.length;
-            loadFlashcards();
-        });
-
-        document.getElementById("deleteFlashcardBtn").addEventListener("click", () => {
-            if (flashcards.length === 0) return;
-            flashcards.splice(flashcardIndex, 1);
-            localStorage.setItem("flashcards", JSON.stringify(flashcards));
-            flashcardIndex = Math.min(flashcardIndex, flashcards.length - 1);
-            loadFlashcards();
-        });
-
-        document.getElementById("shuffleFlashcardsBtn").addEventListener("click", () => {
-            flashcards = flashcards.sort(() => Math.random() - 0.5);
-            localStorage.setItem("flashcards", JSON.stringify(flashcards));
-            flashcardIndex = 0;
-            loadFlashcards();
-        });
-
-        document.addEventListener("DOMContentLoaded", loadFlashcards);
     </script>
-
 </body>
 </html>
