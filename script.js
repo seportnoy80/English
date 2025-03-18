@@ -84,8 +84,7 @@ function removeKnownWord() {
 }
 
 function shareProgress() {
-    const shareText = `אני לומד עברית! אני כבר יודע ${knownWords.length} מילים! 🌟
-    נסו גם: https://english.casual-words.com/`;
+const shareText = `אני לומד אנגלית! אני כבר יודע ${knownWords.length} מילים! 🌟 נסו גם: https://english.casual-words.com/`;
     if (navigator.share) {
         navigator.share({ text: shareText })
             .then(() => console.log("Shared successfully"))
